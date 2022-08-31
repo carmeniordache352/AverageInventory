@@ -8,24 +8,28 @@ import java.util.Map;
 
 public class CalculateAverage {
 
-	static Map <Integer, Double> avg (List <Product> productHistory,LocalDate dateStart, LocalDate dateEnd) {	
+	static Map <Integer, Double> calculateAvg (List <Product> productHistory,LocalDate dateStart, LocalDate dateEnd) {	
 		
-		productHistory.sort(Comparator.comparing(Product::getProductId));
 		Double average = 0.0;
-		Double suma = 0.0;
+		Double sum = 0.0;
 		Double count = 0.0;
-		Integer i=0;
+		Integer i = 0;
 		Integer n = productHistory.size();
+		
+		//colection to save the key-value result (productId-average)
 		Map<Integer,Double> result = new HashMap<>();
-
+		
+		//sort productHistory list by productId
+		productHistory.sort(Comparator.comparing(Product::getProductId));
+		
 		for (i=0; i<n; i++) {
 			
 			if ((productHistory.get(i).getCurrentDate().compareTo(dateStart)>=0)&&(productHistory.get(i).getCurrentDate().compareTo(dateEnd)<=0)){
-				suma = suma + productHistory.get(i).getInventory();
+				sum = sum + productHistory.get(i).getInventory();
 				count ++;
 			}
 			if (count>0) {
-				average = suma/count;
+				average = sum/count;
 				result.put(productHistory.get(i).getProductId(), average);
 				
 			}	
@@ -33,18 +37,13 @@ public class CalculateAverage {
 				Integer thisproduct = productHistory.get(i).getProductId();
 				Integer nextproduct = productHistory.get(i+1).getProductId();
 				
-			if (thisproduct != nextproduct) {
-				suma = 0.0;
-				count = 0.0;
-			}
-			}
-			
-		
+				if (thisproduct != nextproduct) {
+					sum = 0.0;
+					count = 0.0;
+				}
+			}			
 		}
-		
-
-		return result;
-		
+		return result;		
 	}
 	
 	public static void main(String[] args) {
@@ -65,7 +64,7 @@ public class CalculateAverage {
 		productList.add(new Product(7, LocalDate.of(2022, 01, 22), 3));
 		productList.add(new Product(8, LocalDate.of(2022, 01, 22), 6));
 		
-		System.out.println(avg(productList,LocalDate.of(2022, 01, 10),LocalDate.of(2022, 01, 22)));
+		System.out.println(calculateAvg(productList,LocalDate.of(2022, 01, 10),LocalDate.of(2022, 01, 22)));
 
 	}
 
